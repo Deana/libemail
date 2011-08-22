@@ -17,25 +17,27 @@ class Connection
     console.log "Processing all of the data..."
     
     # Do something clever..
+    @lines = @current_data.split( "\n" )
+    for line in @lines
+      m = ''
+      console.log "Processing line: " + line
+      m = /^(\S+?)=(.*)$/.exec line
+
+      if m 
+        @values[m[1]] = m[2]
+      else
+        console.log "Regex failed to match"
+
     console.log(@values)
+    @client.write "action=DISCARD\n\n"
     @client.end()
     
   process_line: (data) ->
+    console.log( "Received data" + data )
     @current_data += data
-    
-    if /^\s*$/.test(data)
-      console.log "End of data"
-      @process_data()
-    else
-      m = /(\S+?)=(.*)/.exec data
-		  
-      if m
-        @values[m[1]] = m[2]
-      else
-        console.log "Invalid input:", data
 
-        @client.write "DUNNO\r\n"
-        @client.end()
+    if /\n\s*\n/m.test @current_data
+      @process_data()
 
 exports.Connection = Connection
 exports.createConnection = (client) ->

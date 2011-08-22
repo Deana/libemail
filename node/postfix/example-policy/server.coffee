@@ -1,6 +1,7 @@
 net  = require "net"
 conn = require "./connection"
 # cluster = require "cluster"
+exports = Server
 
 class Server
   createServer: ->
@@ -10,4 +11,3 @@ class Server
     serv.on "connection", (client) ->
       conn.createConnection(client)
 
-exports = Server
