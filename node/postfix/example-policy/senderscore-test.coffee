@@ -1,9 +1,17 @@
 Senderscore = require './senderscore'
 console = require 'console'
+{EventEmitter} = require 'events'
 
-lookup = '216.40.44.1'
-console.log 'looking up address ' + lookup
+address = '216.40.44.1'
+console.log 'looking up address ' + address
 
-score = Senderscore.score lookup
+ss = new Senderscore.Senderscore()
+listener = new EventEmitter
+score = -1
 
-console.log( "Score: " + score )
+listener.addListener 'response', ( domain, addresses ) ->
+	score = addresses[0].split(".")[3]
+	console.log( domain + " = " + addresses + " : " + score )
+
+ss.lookup address, listener
+

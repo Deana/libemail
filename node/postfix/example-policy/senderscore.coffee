@@ -26,15 +26,3 @@ class Senderscore
 
 
 exports.Senderscore = Senderscore
-exports.score = (address) ->
-	ss = new Senderscore
-	listener = new EventEmitter
-	score = -1
-	listener.addListener 'response', ( domain, addresses ) ->
-		score = addresses[0].split(".")[3]
-		console.log( domain + " = " + addresses + " : " + score )
-		addresses[0].split(".")[3]
-
-	ss.lookup address, listener
-
-	return score
