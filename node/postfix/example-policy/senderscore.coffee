@@ -1,30 +1,40 @@
 dns = require 'dns'
 console = require 'console'
+{EventEmitter} = require 'events'
 
 class Senderscore
 
 	constructor: ->
 		@zonename = 'score.senderscore.com'
+		@score 
 
-	lookup: (@address) ->
+	lookup: (@address, e) ->
 		# Reverse the IP
 		reversed = null
 		m = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/.exec( @address )
 
 		if m
-			reversed = m[4] + "." + m[3] + "." + m[2] + "." + m[1]
+			reversed = m[4] + "." + m[3] + "." + m[2] + "." + m[1] + "." + @zonename
 
-		host = reversed + "." + @zonename
-
-		result = ''
-		dns.resolve4 host, ( err, addresses ) ->
-			for address in addresses
-				a = address.split( "." )
-				return a[3]
+			# @score = e.addListener 'response', ( domain, addresses ) ->
+			# 	@score = addresses[0].split(".")[3]
+			# 	console.log( domain + " = " + addresses + " : " + @score )
+			# 	addresses[0].split(".")[3]
+	
+			dns.resolve4 reversed, ( err, addresses ) ->
+				e.emit 'response', address, addresses
 
 
 exports.Senderscore = Senderscore
-exports.lookup = (address) ->
-	obj = new Senderscore
-	return obj.lookup address
+exports.score = (address) ->
+	ss = new Senderscore
+	listener = new EventEmitter
+	score = -1
+	listener.addListener 'response', ( domain, addresses ) ->
+		score = addresses[0].split(".")[3]
+		console.log( domain + " = " + addresses + " : " + score )
+		addresses[0].split(".")[3]
 
+	ss.lookup address, listener
+
+	return score
