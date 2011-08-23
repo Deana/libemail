@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-server = require "./server"
+Server = require "./server"
 console.log "starting application"
-server.createServer()
+Server.createServer()
