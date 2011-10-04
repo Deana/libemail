@@ -3,8 +3,12 @@ use ComplaintDB;
 
 @ISA = ("ComplaintDB");
 
+use strict;
+
 use constant INDEXWORDPREFIX => 'ndx:word:';
 use constant INCRWORD => 'incr:word';
+
+use constant WORDID => 'id:word:';
 
 sub copyinto {
 	my ($self,$copy) = @_;
@@ -14,13 +18,18 @@ sub copyinto {
 
 sub get {
 	my ($self,$word) = @_;
-	if( $word =~ /^\d+$/ ){
-		my $word_index = $self->{r}->get( INDEXWORDPREFIX . $word ) || do { $self->{r}->set( INDEXWORDPREFIX . $word, $self->{r}->incr( INCRWORD ) ); $self->{r}->get( INDXWORDPREFIX . $word ); };
+	unless ( $word =~ /^\d+$/ ){
+		my $word_index = $self->{r}->get( INDEXWORDPREFIX . $word ) || do { 
+			$self->{r}->set( INDEXWORDPREFIX . $word, $self->{r}->incr( INCRWORD ) ); 
+			$self->{r}->get( INDEXWORDPREFIX . $word ); 
+		};
+		$self->{r}->set( WORDID . $word_index, $word ) if $word_index;
 		return $word_index;
 	}
 	
-	# Looks like a word that we want to get the index number of
-	die( "Getting the word by index isn't currently supported\n" );
+
+	# figure out which word is associated to this
+	return $self->{r}->get( WORDID . $word);
 }
 
 1;
