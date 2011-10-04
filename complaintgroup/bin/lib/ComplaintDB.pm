@@ -20,7 +20,16 @@ sub open_connection {
   return $self;
 }
 
+sub copy_into {
+	my $self = shift;
+	my $copy = shift;
+	$self->{r} = $copy->{r};
+	$self->{dbnum} = $self->{dbnum};
+	return $self;
+}
+
 sub copy {
+	my $self = shift;
 	my $copy = ComplaintDB->new;
 	$copy->{r} = $self->{r};
 	$copy->{dbnum} = $self->{dbnum};

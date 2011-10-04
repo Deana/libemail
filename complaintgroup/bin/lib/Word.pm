@@ -10,12 +10,6 @@ use constant INCRWORD => 'incr:word';
 
 use constant WORDID => 'id:word:';
 
-sub copyinto {
-	my ($self,$copy) = @_;
-	$self->{r} = $copy->{r};
-	return $self;
-}
-
 sub get {
 	my ($self,$word) = @_;
 	unless ( $word =~ /^\d+$/ ){
