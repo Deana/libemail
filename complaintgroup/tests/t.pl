@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use Data::Dumper;
-use lib "./";
+use lib "../lib/";
 use ComplaintDB;
 use Word;
 use NGram;
