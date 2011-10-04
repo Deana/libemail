@@ -25,3 +25,4 @@ isnt( $foobar_index, undef, 'Create/Retrieve index against Redis word' );
 my $stored_word = $word->get( $foobar_index );
 is( $stored_word, $test_word, 'Comparing retreived word from reverse index' );
 
+done_testing( 6 );
