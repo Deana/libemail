@@ -5,6 +5,7 @@ use lib "./";
 use ComplaintDB;
 use Word;
 use NGram;
+use Filename;
 
 my $db = ComplaintDB->new;
 $db->open_connection();
@@ -32,3 +33,15 @@ my $a_ref =  $ng->create_ngram( \@a );
 print Dumper( $a_ref ),"\n";
 
 print Dumper( $ng->get( $a_ref->[0] ) ),"\n";
+
+###
+# Filename testing
+my $FN = Filename->new->copy_into( $db );
+
+print "Converting filename [/foo/bar] to index\n";
+my $id = $FN->get( "/foo/bar" );
+print Dumper( $id ), "\n";
+
+print "Converting $id to a filename\n";
+my $filename = $FN->get( $id );
+print Dumper( $filename ), "\n";
