@@ -7,16 +7,24 @@ sub new {
   my $class = shift;
   my $self = {};
   bless $self, $class;
+	self->{r} = undef;
   return $self;
 }
 
 sub open_connection {
 	my $self = shift;
   my $dbnum = shift || DEFAULTDB;
-	my $r = Redis->new;
-	$r->select( $dbnum );
-	$self->{r} = $r;
+	$self->{r} = Redis->new;
+	$self->{r}->select( $dbnum );
+	$self->{dbnum} = $dbnum;
   return $self;
+}
+
+sub copy {
+	my $copy = ComplaintDB->new;
+	$copy->{r} = $self->{r};
+	$copy->{dbnum} = $self->{dbnum};
+	return $copy;
 }
 
 1;
