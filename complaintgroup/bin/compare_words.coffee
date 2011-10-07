@@ -4,10 +4,34 @@ client = redis.createClient()
 @fn = []
 @matchid = 3
 
+@done = {}
+
 client.on 'ready', () ->
 	client.select 5, ( err, res ) ->
 		#console.dir res
-		client.emit 'getallfilenames'
+		client.emit 'processargs'
+
+client.on 'processargs', () ->
+	for inputid in process.argv
+		do ( inputid ) ->
+			val = /^\d+$/.exec inputid
+			if val?
+				console.log 'processing ' + inputid
+
+				# First, get all words
+				#my @words = $r->smembers( "file:words:$fileindex" );
+				client.smembers 'file:words:' + inputid, ( err, val ) ->
+					#console.log inputid + " => " + val
+					for i in val
+						do ( i ) ->
+							console.log "ngram id: " + i
+							#my @files = $r->smembers( "set:ngram:$ngram_id" );
+							#
+							# Ok, now we want to get all files that contain this
+							# ngram ID, and compare ourselves to it
+							client.smembers "set:ngram:" + i, ( err, v2 ) ->
+							  	#console.log "Comparing " + inputid + " and " + v2
+							  	client.emit 'compare', inputid, v2
 
 client.on 'compare', (fileid, mid) ->
 	return unless fileid?
@@ -18,40 +42,5 @@ client.on 'compare', (fileid, mid) ->
 
 client.on 'alldone', ->
 	client.quit()
-
-client.on 'getallfilenames', ->
-	@fn = [] unless @fn?
-	client.keys 'orig:idx:*', (err,res) ->
-		if res?
-			do ( res ) ->
-				fileids = []
-				for val in res
-					do (val) ->
-						ret = /.*:.*:(\d+)$/.exec val
-						fileids.push ret[1] if ret?
-
-				client.emit 'matchall', fileids
-
-client.on 'matchall', ( fileids ) ->
-	do ( fileids ) ->
-		for inputid in process.argv
-			@matchid = inputid if /^\d+$/.exec( inputid )?
-			console.log "Cannot matchall, since fileids is undefined" unless fileids?
-			for j in fileids
-				client.emit 'compare', @matchid, j unless @matchid == j
-		client.emit 'alldone'
-
-
-client.on 'getwords', (@index,@filename) ->
-	console.log @filename
-	console.log @index
-
-	# lets get the words in the set: file:words:$index
-	console.log 'getting smembers for file:words:' + @index if @index?
-	client.smembers 'file:words:' + @index, (err,res) ->
-		if res?
-			console.log @index + res
-			res.forEach ( @resval, @resindex, @resarray ) ->
-				console.log @resval if @resval?
 
 # vim: set nu ts=2:
