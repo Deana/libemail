@@ -11,12 +11,14 @@ module OpenSRS
         @base = url
         @creds = creds
       end
+
+      def uri ( method = '' )
+        URI.parse( @base )
+      end
   
       def request(method, params = {})
         params["credentials"] = @creds
   
-        uri = URI.parse( @base + "/" + method.to_s)
-
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -39,6 +41,7 @@ module OpenSRS
         if response["error"] =~ /Invalid credentials supplied in request/
           raise InvalidCredentials, response["error"]
         end
+          raise Exception, response["error"]
       end
       response
     end
@@ -65,7 +68,11 @@ module OpenSRS
       @credentials = { :client => "Ruby OpenSRS::OMA 0.01", :user => @username, :password => @password }
       super( @url, @credentials )
     end
-  
+ 
+    def uri ( method = @method )
+      URI.parse( @base + "/" + method.to_s)
+    end
+ 
     METHODS = %w(
       add_role
       authenticate
@@ -124,6 +131,7 @@ module OpenSRS
     def self.create_methods
       METHODS.each do |method|
         define_method method do |*argv|
+          @method = method
           valid?( request method, *argv )     
         end
       end
