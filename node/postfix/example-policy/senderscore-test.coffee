@@ -9,7 +9,7 @@ ss = new Senderscore.Senderscore()
 listener = new EventEmitter
 score = -1
 
-listener.addListener 'response', ( domain, addresses ) ->
+listener.on 'response', ( domain, addresses ) ->
 	score = addresses[0].split(".")[3]
 	console.log( domain + " = " + addresses + " : " + score )
 

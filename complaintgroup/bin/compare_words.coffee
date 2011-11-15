@@ -1,13 +1,17 @@
 redis = require 'redis'
-client = redis.createClient()
+client = redis.createClient('slowpoke.internal.tucows.com')
 
 @fn = []
 @matchid = 3
 
 client.on 'ready', () ->
 	client.select 5, ( err, res ) ->
-		#console.dir res
-		client.emit 'getallfilenames'
+		client.emit 'processargs'
+
+client.on 'processargs', ->
+	for inputid in process.argv
+		do ( inputid ) ->
+			console.log 'Processing ' + inputid
 
 client.on 'compare', (fileid, mid) ->
 	return unless fileid?
