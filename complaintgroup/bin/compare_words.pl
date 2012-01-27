@@ -33,11 +33,10 @@ for my $fileindex ( @ARGV ){
 	for my $ngram_id ( @words ){
 		my @files = $r->smembers( "set:ngram:$ngram_id" );
 		for ( @files ){
-      next if defined $seen->{$_};
-      next if $_ == $fileindex;  # Don't compare to yourself
-      $seen->{$_}++;
-      my $thesame = compare( $r, $fileindex, $_ );
-      next if $thesame < 0;
+			next if defined $seen->{$_};
+		  $seen->{$_}++;
+			my $thesame = compare( $r, $fileindex, $_ );
+			next if $thesame < 0;
       $thesame *= 100.0;
       printf "%s / %s == %.4f\n", $fileindex, $_, $thesame;
 		}

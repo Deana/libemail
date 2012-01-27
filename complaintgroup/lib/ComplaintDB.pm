@@ -7,7 +7,7 @@ sub new {
   my $class = shift;
   my $self = {};
   bless $self, $class;
-	self->{r} = undef;
+	$self->{r} = undef;
   return $self;
 }
 
