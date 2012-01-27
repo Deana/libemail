@@ -1,0 +1,10 @@
+#!/usr/bin/env rake
+
+
+task :gem do
+  system 'gem build oma.gemspec'
+end
+
+task :gem_push, [:gem] do
+  
+end
