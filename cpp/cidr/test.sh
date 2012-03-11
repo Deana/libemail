@@ -10,7 +10,7 @@ fi
 
 
 echo "Executing:[t.pthread] against:[/tmp/xbl.ips] using:[15] threads" > log.$PID.txt
-for i in `seq 15`
+for i in `seq 5`
 do
 	echo "Starting: $(date)" >> log.$PID.txt
 	/usr/bin/time --output=TIME.$PID ./t.pthread whitelist $THREADS < /tmp/xbl.ips 2>&1 >/dev/null
@@ -19,4 +19,4 @@ do
 done
 
 rm TIME.$PID
-mv log.$PID.txt log.${THREADS}t.txt
+#mv log.$PID.txt log.${THREADS}t.txt

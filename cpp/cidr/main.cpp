@@ -8,14 +8,14 @@
 // Forward decl
 static int createCidrArray( const std::vector< CIDR > & v, cidr_pair_t * cp );
 
-void print_whitelisted( IP::decimal_t & whitelisted ){
-  IP i(whitelisted);
-  std::cout << "Whitelisted: " << i.str() << std::endl;
+void print_matched( IP::decimal_t & matched ){
+  IP i(matched);
+  std::cout << "Matched: " << i.str() << std::endl;
 }
 
 int main(int argc, char **argv){
 
-  std::vector< CIDR > whitelist;
+  std::vector< CIDR > target;
 
   try{
     std::ifstream ifs ( argv[1], std::ifstream::in );
@@ -28,7 +28,7 @@ int main(int argc, char **argv){
        if( sline.size() < 1 )
          continue;
        
-       whitelist.push_back( CIDR( sline ) );
+       target.push_back( CIDR( sline ) );
     }
     ifs.close();
 
@@ -62,8 +62,8 @@ int main(int argc, char **argv){
   // We have a sorted array of unsigned long.  Go through
   // each whitelist, and find all IPs within its bounds
 
-  for( std::vector< CIDR >::iterator i = whitelist.begin();
-       i != whitelist.end();
+  for( std::vector< CIDR >::iterator i = target.begin();
+       i != target.end();
        i++ ){
     IP::decimal_t lower = (*i).lower();
     IP::decimal_t upper = (*i).upper();
@@ -72,7 +72,7 @@ int main(int argc, char **argv){
     std::vector< IP::decimal_t >::iterator lb = std::lower_bound( v.begin(), v.end(), lower );
     std::vector< IP::decimal_t >::iterator ub = std::upper_bound( v.begin(), v.end(), upper );
 
-    std::for_each( lb, ub, print_whitelisted );
+    std::for_each( lb, ub, print_matched );
   }
 
   return 0;
