@@ -6,7 +6,7 @@ test:	t
 	./t < ip.list
 
 clean:
-	rm -f *.o t t.pthread
+	rm -f *.o t t.pthread match
 
 t:	main.o cidr.o ip.o utility.o
 	g++ main.o cidr.o ip.o utility.o -o t

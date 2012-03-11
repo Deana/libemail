@@ -13,7 +13,7 @@ IP::IP( const std::string & ip )
   _decimal = ntohl(addr.s_addr);
 }
 
-IP::decimal_t IP::decimal() const {
+const IP::decimal_t & IP::decimal() const {
   return _decimal;
 }
 

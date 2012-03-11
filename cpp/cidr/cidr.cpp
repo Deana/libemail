@@ -48,6 +48,14 @@ inline bool CIDR::in( const IP & ip ) const {
   return false;
 }
 
+inline bool CIDR::overlaps( const CIDR & c ) const {
+  if( c.lower() >= _lower && c.lower() <= _upper )
+    return true;
+  if( c.upper() >= _lower && c.upper() <= _upper )
+    return true;
+  return false;
+}
+
 IP::decimal_t CIDR::lower() const {
   return _lower;
 }
