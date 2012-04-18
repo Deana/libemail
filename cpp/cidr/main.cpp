@@ -53,7 +53,7 @@ int main(int argc, char **argv){
   }
   catch( std::string & e ){
     std::cerr << "Exception: " << e << std::endl;
-    return NULL;
+    return 0;
   }
 
   std::cout << "Created array for subsequent work.."
