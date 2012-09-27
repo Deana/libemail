@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'oma'
-  s.version     = '0.0.1b'
-  s.date        = '2011-11-15'
+  s.version     = '0.0.2'
+  s.date        = '2012-09-27'
   s.summary     = "OpenSRS's OMA Ruby client library"
   s.description = "Communicate with OpenSRS' Email Platform using the OMA protocol"
   s.authors     = ["Peter Blair"]

@@ -48,7 +48,7 @@ module OpenSRS
   end
 
   class OMA < JsonRPC::Client
-    VERSION = '0.01'
+    VERSION = '0.0.2'
 
     include ErrorHandler
 
@@ -58,76 +58,24 @@ module OpenSRS
     attr_reader    :methods
   
     def initialize( opt={} )
-      OMA.create_methods
-      @methods = METHODS
+      #OMA.create_methods
 
       @username = opt[:username] || ''
       @password = opt[:password] || ''
   
       @url = opt[:url] || 'https://admin.a.hostedemail.com/api'
-      @credentials = { :client => "Ruby OpenSRS::OMA 0.01", :user => @username, :password => @password }
+      @credentials = { :client => "Ruby OpenSRS::OMA 0.0.2", :user => @username, :password => @password }
       super( @url, @credentials )
     end
  
     def uri ( method = @method )
       URI.parse( @base + "/" + method.to_s)
     end
- 
-    METHODS = %w(
-      add_role
-      authenticate
-      change_company
-      change_company_bulletin
-      change_domain
-      change_domain_bulletin
-      change_user
-      change_brand
-      create_workgroup
-      delete_company
-      delete_domain
-      delete_user
-      delete_workgroup
-      echo
-      generate_token
-      get_company
-      get_company_bulletin
-      get_company_changes
-      get_deleted_contacts
-      get_deleted_messages
-      get_domain
-      get_domain_bulletin
-      get_domain_changes
-      get_user
-      get_user_attribute_history
-      get_user_changes
-      get_user_messages
-      get_valid_languages
-      get_valid_timezones
-      migration_add
-      migration_jobs
-      migration_status
-      migration_threads
-      migration_trace
-      move_user_messages
-      post_domain_bulletin
-      post_company_bulletin
-      remove_role
-      rename_user
-      restore_deleted_contacts
-      restore_deleted_messages
-      restore_domain
-      restore_user
-      search_brand_members
-      search_brands
-      search_companies
-      search_domains
-      search_users
-      search_workgroups
-      set_role
-      stats_summary
-      stats_list
-      stats_snapshot )
 
+    # removed, in favour of metaprogramming 
+    METHODS = %w(  )
+
+    # This method is deprecated..
     def self.create_methods
       METHODS.each do |method|
         define_method method do |*argv|
@@ -135,6 +83,11 @@ module OpenSRS
           valid?( request method, *argv )     
         end
       end
+    end
+
+    def method_missing( m, *args, &block )
+      @method = m
+      request( m, *args )
     end
   end
 end
